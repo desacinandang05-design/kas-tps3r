@@ -76,7 +76,12 @@ function login(){
   let passVal = document.getElementById("password").value;
 
   auth.signInWithEmailAndPassword(emailVal, passVal)
-  .catch(() => auth.createUserWithEmailAndPassword(emailVal, passVal));
+  .then(()=> alert("Login berhasil"))
+  .catch(err => {
+    alert(err.message);
+    auth.createUserWithEmailAndPassword(emailVal, passVal)
+    .catch(e => alert(e.message));
+  });
 }
 
 // LOGOUT
