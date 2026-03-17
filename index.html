@@ -1,13 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Pembukuan TPS3R</title>
+<meta charset="UTF-8">
+<title>TPS3R Setia Karya</title>
+
+<style>
+body { font-family: Arial; margin: 20px; }
+input, button { margin: 5px; padding: 6px; }
+table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+</style>
+
 </head>
 <body>
 
-<h2>Pembukuan TPS3R Setia Karya</h2>
+<h2>TPS3R Setia Karya - Pembukuan</h2>
 
-<p>Aplikasi berhasil jalan 👍</p>
+<input type="date" id="tanggal">
+<input type="text" id="uraian" placeholder="Uraian">
+<input type="number" id="masuk" placeholder="Masuk">
+<input type="number" id="keluar" placeholder="Keluar">
+<button onclick="tambah()">Tambah</button>
+
+<table>
+<thead>
+<tr>
+<th>No</th>
+<th>Tanggal</th>
+<th>Uraian</th>
+<th>Masuk</th>
+<th>Keluar</th>
+<th>Saldo</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="tabel"></tbody>
+</table>
+
+<script>
+let data = JSON.parse(localStorage.getItem("kas")) || [];
+
+function simpan(){
+  localStorage.setItem("kas", JSON.stringify(data));
+}
+
+function tampil(){
+  let t="";
+  let saldo=0;
+
+  data.forEach((d,i)=>{
+    saldo += (d.masuk - d.keluar);
+    t+=`
+    <tr>
+    <td>${i+1}</td>
+    <td>${d.tanggal}</td>
+    <td>${d.uraian}</td>
+    <td>${d.masuk}</td>
+    <td>${d.keluar}</td>
+    <td>${saldo}</td>
+    <td><button onclick="hapus(${i})">Hapus</button></td>
+    </tr>`;
+  });
+
+  tabel.innerHTML=t;
+}
+
+function tambah(){
+  data.push({
+    tanggal: tanggal.value,
+    uraian: uraian.value,
+    masuk: parseInt(masuk.value)||0,
+    keluar: parseInt(keluar.value)||0
+  });
+
+  simpan();
+  tampil();
+}
+
+function hapus(i){
+  data.splice(i,1);
+  simpan();
+  tampil();
+}
+
+tampil();
+</script>
 
 </body>
 </html>
