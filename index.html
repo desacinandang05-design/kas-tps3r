@@ -34,7 +34,12 @@ th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
 <input type="number" id="masuk" placeholder="Masuk">
 <input type="number" id="keluar" placeholder="Keluar">
 <button onclick="tambah()">Tambah</button>
+<h3>Laporan Bulanan</h3>
 
+<input type="month" id="bulan">
+<button onclick="laporan()">Tampilkan</button>
+
+<p id="hasil"></p>
 <table>
 <thead>
 <tr>
@@ -53,6 +58,27 @@ th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
 
 <script>
 
+function laporan(){
+  let bulan = document.getElementById("bulan").value;
+
+  let totalMasuk = 0;
+  let totalKeluar = 0;
+
+  data.forEach(d => {
+    if(d.tanggal.startsWith(bulan)){
+      totalMasuk += d.masuk;
+      totalKeluar += d.keluar;
+    }
+  });
+
+  let saldo = totalMasuk - totalKeluar;
+
+  document.getElementById("hasil").innerHTML = `
+    Total Masuk: ${totalMasuk} <br>
+    Total Keluar: ${totalKeluar} <br>
+    Saldo: ${saldo}
+  `;
+}
 // 🔥 CONFIG PUNYA MAS
 const firebaseConfig = {
   apiKey: "AIzaSyC97EDb5XcD_pYt2UZp94ILTUjM8Mqkq_s",
