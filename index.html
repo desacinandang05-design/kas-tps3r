@@ -93,6 +93,7 @@ th, td {
 <input type="number" id="masuk" placeholder="Masuk">
 <input type="number" id="keluar" placeholder="Keluar">
 <button onclick="tambah()">Tambah</button>
+<button onclick="exportExcel()">Export Excel</button>
 <h3>Laporan Bulanan</h3>
 
 <input type="month" id="bulan">
@@ -231,7 +232,23 @@ function tampil(){
 function hapus(id){
   db.collection("kas").doc(id).delete();
 }
+function exportExcel(){
+  let csv = "No,Tanggal,Uraian,Masuk,Keluar,Saldo\n";
+  let saldo = 0;
 
+  data.forEach((d,i)=>{
+    saldo += (d.masuk - d.keluar);
+    csv += `${i+1},${d.tanggal},${d.uraian},${d.masuk},${d.keluar},${saldo}\n`;
+  });
+
+  let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  let link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  let today = new Date().toISOString().slice(0,10);
+  link.download = `laporan_tps3r_${today}.csv`;
+  link.click();
+}
+  
 </script>
 
 </body>
