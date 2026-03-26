@@ -104,6 +104,23 @@ button {
   min-width: 120px;
 }
 
+td:last-child {
+  text-align: center;
+}
+
+td:last-child button {
+  min-width: auto;     /* hilangkan lebar default */
+  padding: 5px 8px;
+  font-size: 12px;
+  margin: 2px;
+}
+
+td:last-child {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
 </style>
 
 <div class="header">
@@ -421,14 +438,17 @@ window.onload = function() {
 
 function editData(id, tanggal, uraian, masuk, keluar){
 
-    // isi ke form
     document.getElementById("tanggal").value = tanggal;
     document.getElementById("uraian").value = uraian;
     document.getElementById("masuk").value = formatRupiah(masuk);
     document.getElementById("keluar").value = formatRupiah(keluar);
 
+    const btn = document.getElementById("btnSimpan");
+    btn.innerText = "Update";
+    btn.setAttribute("onclick", `updateData('${id}')`);
+}
     // ubah tombol tambah jadi update
-    const btn = document.querySelector("button[onclick='tambah()']");
+    <button id="btnSimpan" onclick="tambah()">Tambah</button>
     btn.innerText = "Update";
     btn.setAttribute("onclick", `updateData('${id}')`);
 }
@@ -447,8 +467,7 @@ function updateData(id){
     document.getElementById("masuk").value = "";
     document.getElementById("keluar").value = "";
 
-    // balikin tombol
-    const btn = document.querySelector("button[onclick^='updateData']");
+    const btn = document.getElementById("btnSimpan");
     btn.innerText = "Tambah";
     btn.setAttribute("onclick", "tambah()");
 }
