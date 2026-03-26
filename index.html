@@ -235,48 +235,33 @@ function hapus(id){
 function exportToExcel(data) {
     const wb = XLSX.utils.book_new();
 
-    // Mapping data biar rapi
-    const formattedData = data.map((item, index) => ({
-        "No": index + 1,
-        "Tanggal": new Date(item.tanggal).toLocaleDateString("id-ID")
-        "Nama": item.nama,
-        "Jenis": item.jenis,
-        "Jumlah (Rp)": "Rp " + item.jumlah.toLocaleString("id-ID")
-        "Keterangan": item.keterangan || "-"
-    }));
-
-    const ws = XLSX.utils.json_to_sheet(formattedData, { origin: "A3" });
-
-    // Tambahkan Judul
-    XLSX.utils.sheet_add_aoa(ws, [
-        ["LAPORAN KAS TPS3R SETIA KARYA"],
-        [""],
-    ], { origin: "A1" });
-
-    // Atur lebar kolom
-    ws['!cols'] = [
-        { wch: 5 },   // No
-        { wch: 15 },  // Tanggal
-        { wch: 20 },  // Nama
-        { wch: 15 },  // Jenis
-        { wch: 15 },  // Jumlah
-        { wch: 25 }   // Keterangan
+    const wsData = [
+        ["No", "Tanggal", "Uraian", "Masuk", "Keluar", "Saldo"], // Header
+        ...data.map((d, i) => [
+            i + 1,
+            d.tanggal,
+            d.uraian,
+            d.masuk ? "Rp " + d.masuk.toLocaleString("id-ID") : "-"
+            d.keluar,
+            d.saldo
+        ])
     ];
 
-    // Styling sederhana (optional, tergantung support)
-    const range = XLSX.utils.decode_range(ws['!ref']);
-    for (let C = range.s.c; C <= range.e.c; ++C) {
-        const cell = ws[XLSX.utils.encode_cell({ r: 2, c: C })];
-        if (cell) {
-            cell.s = {
-                font: { bold: true }
-            };
-        }
-    }
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    // Lebar kolom biar rapi
+    ws['!cols'] = [
+        { wch: 5 },
+        { wch: 15 },
+        { wch: 30 },
+        { wch: 15 },
+        { wch: 15 },
+        { wch: 15 }
+    ];
 
     XLSX.utils.book_append_sheet(wb, ws, "Laporan Kas");
 
-    XLSX.writeFile(wb, "Laporan_Kas_TPS3R.xlsx");
+    XLSX.writeFile(wb, "Laporan_Kas.xlsx");
 }
   
 </script>
