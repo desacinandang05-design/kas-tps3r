@@ -278,7 +278,15 @@ function tampil(){
 
   let bulan = document.getElementById("bulan").value;
 
-  data.forEach((d,i)=>{
+let no = 1;
+
+data.forEach((d)=>{
+
+  if (bulan && !d.tanggal.startsWith(bulan)) return;
+
+  t+=`
+  <tr>
+  <td>${no++}</td>
 
     // 🔥 FILTER BULAN
     if (bulan && !d.tanggal.startsWith(bulan)) return;
@@ -295,7 +303,10 @@ function tampil(){
     <td>${d.masuk ? formatRupiah(d.masuk) : "-"}</td>
     <td>${d.keluar ? formatRupiah(d.keluar) : "-"}</td>
     <td>${formatRupiah(saldo)}</td>
-    <td><button onclick="hapus('${d.id}')">Hapus</button></td>
+    <td>
+      <button onclick="editData('${d.id}', '${d.tanggal}', '${d.uraian}', ${d.masuk}, ${d.keluar})">Edit</button>
+      <button onclick="hapus('${d.id}')">Hapus</button>
+    </td>
     </tr>`;
   });
 
@@ -419,6 +430,40 @@ function bulanIni(){
 window.onload = function() {
     bulanIni();
 };
+
+function editData(id, tanggal, uraian, masuk, keluar){
+
+    // isi ke form
+    document.getElementById("tanggal").value = tanggal;
+    document.getElementById("uraian").value = uraian;
+    document.getElementById("masuk").value = formatRupiah(masuk);
+    document.getElementById("keluar").value = formatRupiah(keluar);
+
+    // ubah tombol tambah jadi update
+    const btn = document.querySelector("button[onclick='tambah()']");
+    btn.innerText = "Update";
+    btn.setAttribute("onclick", `updateData('${id}')`);
+}
+
+function updateData(id){
+    db.collection("kas").doc(id).update({
+        tanggal: document.getElementById("tanggal").value,
+        uraian: document.getElementById("uraian").value,
+        masuk: parseInt(document.getElementById("masuk").value.replace(/\./g, "")) || 0,
+        keluar: parseInt(document.getElementById("keluar").value.replace(/\./g, "")) || 0
+    });
+
+    // reset form
+    document.getElementById("tanggal").value = "";
+    document.getElementById("uraian").value = "";
+    document.getElementById("masuk").value = "";
+    document.getElementById("keluar").value = "";
+
+    // balikin tombol
+    const btn = document.querySelector("button[onclick^='updateData']");
+    btn.innerText = "Tambah";
+    btn.setAttribute("onclick", "tambah()");
+}
 
 </script>
 
