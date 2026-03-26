@@ -17,6 +17,43 @@ body {
   margin: 0;
 }
 
+.dashboard {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.box {
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+  color: white;
+  border-radius: 12px;
+}
+
+.box h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.box p {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.saldo {
+  background: linear-gradient(135deg, #3182ce, #63b3ed);
+}
+
+.masuk {
+  background: linear-gradient(135deg, #38a169, #68d391);
+}
+
+.keluar {
+  background: linear-gradient(135deg, #e53e3e, #fc8181);
+}
 .header {
   background: linear-gradient(135deg, #2c7a7b, #38b2ac);
   color: white;
@@ -103,6 +140,20 @@ tr:nth-child(even) {
 </div>
 
 <div id="app" style="display:none;">
+<div class="dashboard">
+  <div class="card box saldo">
+    <h3>Saldo</h3>
+    <p id="saldoDashboard">Rp 0</p>
+  </div>
+  <div class="card box masuk">
+    <h3>Total Masuk</h3>
+    <p id="masukDashboard">Rp 0</p>
+  </div>
+  <div class="card box keluar">
+    <h3>Total Keluar</h3>
+    <p id="keluarDashboard">Rp 0</p>
+  </div>
+</div>
 <button onclick="logout()">Logout</button><br>
 
 <input type="date" id="tanggal">
@@ -231,11 +282,13 @@ function ambilData(){
 
 // TAMPILKAN
 function tampil(){
-  let t="";
-  let saldo=0;
+  let totalMasuk = 0;
+  let totalKeluar = 0;
 
   data.forEach((d,i)=>{
     saldo += (d.masuk - d.keluar);
+    totalMasuk += d.masuk;
+    totalKeluar += d.keluar;
     t+=`
     <tr>
     <td>${i+1}</td>
@@ -250,6 +303,10 @@ function tampil(){
 
   document.getElementById("tabel").innerHTML=t;
 }
+
+document.getElementById("saldoDashboard").innerText = "Rp " + formatRupiah(saldo);
+document.getElementById("masukDashboard").innerText = "Rp " + formatRupiah(totalMasuk);
+document.getElementById("keluarDashboard").innerText = "Rp " + formatRupiah(totalKeluar);
 
 // HAPUS
 function hapus(id){
@@ -344,7 +401,7 @@ document.getElementById("keluar").addEventListener("input", function(e) {
     let value = e.target.value.replace(/\D/g, "");
     e.target.value = formatRupiah(value);
 });
-  
+
 </script>
 
 </body>
