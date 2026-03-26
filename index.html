@@ -232,21 +232,51 @@ function tampil(){
 function hapus(id){
   db.collection("kas").doc(id).delete();
 }
-function exportExcel(){
-  let csv = "No,Tanggal,Uraian,Masuk,Keluar,Saldo\n";
-  let saldo = 0;
+function exportToExcel(data) {
+    const wb = XLSX.utils.book_new();
 
-  data.forEach((d,i)=>{
-    saldo += (d.masuk - d.keluar);
-    csv += `${i+1},${d.tanggal},${d.uraian},${d.masuk},${d.keluar},${saldo}\n`;
-  });
+    // Mapping data biar rapi
+    const formattedData = data.map((item, index) => ({
+        "No": index + 1,
+        "Tanggal": new Date(item.tanggal).toLocaleDateString("id-ID")
+        "Nama": item.nama,
+        "Jenis": item.jenis,
+        "Jumlah (Rp)": "Rp " + item.jumlah.toLocaleString("id-ID")
+        "Keterangan": item.keterangan || "-"
+    }));
 
-  let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  let link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  let today = new Date().toISOString().slice(0,10);
-  link.download = `laporan_tps3r_${today}.csv`;
-  link.click();
+    const ws = XLSX.utils.json_to_sheet(formattedData, { origin: "A3" });
+
+    // Tambahkan Judul
+    XLSX.utils.sheet_add_aoa(ws, [
+        ["LAPORAN KAS TPS3R SETIA KARYA"],
+        [""],
+    ], { origin: "A1" });
+
+    // Atur lebar kolom
+    ws['!cols'] = [
+        { wch: 5 },   // No
+        { wch: 15 },  // Tanggal
+        { wch: 20 },  // Nama
+        { wch: 15 },  // Jenis
+        { wch: 15 },  // Jumlah
+        { wch: 25 }   // Keterangan
+    ];
+
+    // Styling sederhana (optional, tergantung support)
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cell = ws[XLSX.utils.encode_cell({ r: 2, c: C })];
+        if (cell) {
+            cell.s = {
+                font: { bold: true }
+            };
+        }
+    }
+
+    XLSX.utils.book_append_sheet(wb, ws, "Laporan Kas");
+
+    XLSX.writeFile(wb, "Laporan_Kas_TPS3R.xlsx");
 }
   
 </script>
