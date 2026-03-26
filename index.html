@@ -10,6 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 body {
   font-family: 'Segoe UI', Arial;
@@ -132,6 +133,58 @@ th:last-child, td:last-child {
   width: 120px;
 }
 
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  width: 300px;
+  margin: 10% auto;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  width: 300px;
+  margin: 10% auto;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.aksi-btn button {
+  background: #2c7a7b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.aksi-btn button:hover {
+  opacity: 0.8;
+}
+
 </style>
 
 <div class="header">
@@ -150,6 +203,20 @@ th:last-child, td:last-child {
 </div>
 
 <div id="app" style="display:none;">
+<div id="modalEdit" class="modal">
+  <div class="modal-content">
+    <h3>Edit Data</h3>
+
+    <input type="date" id="editTanggal">
+    <input type="text" id="editUraian" placeholder="Uraian">
+    <input type="text" id="editMasuk" placeholder="Masuk">
+    <input type="text" id="editKeluar" placeholder="Keluar">
+
+    <br><br>
+    <button onclick="simpanEdit()">Simpan</button>
+    <button onclick="tutupModal()">Batal</button>
+  </div>
+</div>
 <div class="dashboard">
   <div class="card box saldo">
     <h3>Saldo</h3>
@@ -200,6 +267,20 @@ th:last-child, td:last-child {
 </div>
 
 <button id="btnSimpan" onclick="tambah()">Tambah</button>
+<div id="modalEdit" class="modal">
+  <div class="modal-content">
+    <h3>Edit Data</h3>
+
+    <input type="date" id="editTanggal">
+    <input type="text" id="editUraian" placeholder="Uraian">
+    <input type="text" id="editMasuk" placeholder="Masuk">
+    <input type="text" id="editKeluar" placeholder="Keluar">
+
+    <br><br>
+    <button onclick="simpanEdit()">Simpan</button>
+    <button onclick="tutupModal()">Batal</button>
+  </div>
+</div>
 <script>
 
 function laporan(){
@@ -324,8 +405,12 @@ function tampil(){
     <td>${formatRupiah(saldo)}</td>
     <td>
       <div class="aksi-btn">
-        <button onclick="editData('${d.id}', '${d.tanggal}', '${d.uraian}', ${d.masuk}, ${d.keluar})">Edit</button>
-        <button onclick="hapus('${d.id}')">Hapus</button>
+        <button onclick="editData('${d.id}', '${d.tanggal}', '${d.uraian}', ${d.masuk}, ${d.keluar})">
+          <i class="fa fa-edit"></i>
+        </button>
+        <button onclick="hapus('${d.id}')">
+          <i class="fa fa-trash"></i>
+        </button>
       </div>
     </td>
     </tr>`;
@@ -339,7 +424,9 @@ function tampil(){
 }
 // HAPUS
 function hapus(id){
-  db.collection("kas").doc(id).delete();
+  if(confirm("Yakin mau hapus data ini?")){
+    db.collection("kas").doc(id).delete();
+  }
 }
 function exportExcel() {
 
@@ -481,6 +568,60 @@ function updateData(id){
     btn.setAttribute("onclick", "tambah()");
 }
 
+let editId = null;
+
+function editData(id, tanggal, uraian, masuk, keluar){
+    editId = id;
+
+    document.getElementById("editTanggal").value = tanggal;
+    document.getElementById("editUraian").value = uraian;
+    document.getElementById("editMasuk").value = formatRupiah(masuk);
+    document.getElementById("editKeluar").value = formatRupiah(keluar);
+
+    document.getElementById("modalEdit").style.display = "block";
+}
+
+function tutupModal(){
+    document.getElementById("modalEdit").style.display = "none";
+}
+
+function simpanEdit(){
+    db.collection("kas").doc(editId).update({
+        tanggal: document.getElementById("editTanggal").value,
+        uraian: document.getElementById("editUraian").value,
+        masuk: parseInt(document.getElementById("editMasuk").value.replace(/\./g, "")) || 0,
+        keluar: parseInt(document.getElementById("editKeluar").value.replace(/\./g, "")) || 0
+    });
+
+    tutupModal();
+}
+let editId = null;
+
+function editData(id, tanggal, uraian, masuk, keluar){
+    editId = id;
+
+    document.getElementById("editTanggal").value = tanggal;
+    document.getElementById("editUraian").value = uraian;
+    document.getElementById("editMasuk").value = formatRupiah(masuk);
+    document.getElementById("editKeluar").value = formatRupiah(keluar);
+
+    document.getElementById("modalEdit").style.display = "block";
+}
+
+function tutupModal(){
+    document.getElementById("modalEdit").style.display = "none";
+}
+
+function simpanEdit(){
+    db.collection("kas").doc(editId).update({
+        tanggal: document.getElementById("editTanggal").value,
+        uraian: document.getElementById("editUraian").value,
+        masuk: parseInt(document.getElementById("editMasuk").value.replace(/\./g, "")) || 0,
+        keluar: parseInt(document.getElementById("editKeluar").value.replace(/\./g, "")) || 0
+    });
+
+    tutupModal();
+}
 </script>
 
 </body>
