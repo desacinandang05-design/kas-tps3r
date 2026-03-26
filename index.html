@@ -212,8 +212,8 @@ function tambah(){
   db.collection("kas").add({
     tanggal: document.getElementById("tanggal").value,
     uraian: document.getElementById("uraian").value,
-    masuk: parseInt(document.getElementById("masuk").value)||0,
-    keluar: parseInt(document.getElementById("keluar").value)||0
+    masuk: parseInt(document.getElementById("masuk").value.replace(/\./g, "")) || 0,
+    keluar: parseInt(document.getElementById("keluar").value.replace(/\./g, "")) || 0
   });
 }
 
@@ -241,9 +241,9 @@ function tampil(){
     <td>${i+1}</td>
     <td>${d.tanggal}</td>
     <td>${d.uraian}</td>
-    <td>${d.masuk}</td>
-    <td>${d.keluar}</td>
-    <td>${saldo}</td>
+    <td>${d.masuk ? formatRupiah(d.masuk) : "-"}</td>
+    <td>${d.keluar ? formatRupiah(d.keluar) : "-"}</td>
+    <td>${formatRupiah(saldo)}</td>
     <td><button onclick="hapus('${d.id}')">Hapus</button></td>
     </tr>`;
   });
