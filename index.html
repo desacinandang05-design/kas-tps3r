@@ -7,6 +7,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
 body {
@@ -238,24 +239,30 @@ function tampil(){
 function hapus(id){
   db.collection("kas").doc(id).delete();
 }
-function exportToExcel(data) {
-    const wb = XLSX.utils.book_new();
+function exportExcel() {
+
+    let saldo = 0;
 
     const wsData = [
-        ["No", "Tanggal", "Uraian", "Masuk", "Keluar", "Saldo"], // Header
-        ...data.map((d, i) => [
-    i + 1,
-    d.tanggal,
-    d.uraian,
-    d.masuk ? "Rp " + d.masuk.toLocaleString("id-ID") : "-",
-    d.keluar,
-    d.saldo
-])
+        ["No", "Tanggal", "Uraian", "Masuk", "Keluar", "Saldo"]
     ];
 
+    data.forEach((d, i) => {
+        saldo += (d.masuk - d.keluar);
+
+        wsData.push([
+            i + 1,
+            d.tanggal,
+            d.uraian,
+            d.masuk ? "Rp " + d.masuk.toLocaleString("id-ID") : "-",
+            d.keluar ? "Rp " + d.keluar.toLocaleString("id-ID") : "-",
+            "Rp " + saldo.toLocaleString("id-ID")
+        ]);
+    });
+
+    const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(wsData);
 
-    // Lebar kolom biar rapi
     ws['!cols'] = [
         { wch: 5 },
         { wch: 15 },
@@ -267,7 +274,7 @@ function exportToExcel(data) {
 
     XLSX.utils.book_append_sheet(wb, ws, "Laporan Kas");
 
-    XLSX.writeFile(wb, "Laporan_Kas.xlsx");
+    XLSX.writeFile(wb, "Laporan_Kas_TPS3R.xlsx");
 }
 
 
