@@ -242,17 +242,37 @@ function hapus(id){
 }
 function exportExcel() {
 
+    if (data.length === 0) {
+        alert("Data masih kosong!");
+        return;
+    }
+
     let saldo = 0;
+    let totalMasuk = 0;
+    let totalKeluar = 0;
+
+    let bulan = document.getElementById("bulan").value;
 
     const wsData = [
+        ["LAPORAN KAS TPS3R SETIA KARYA"],
+        ["DESA CINANDANG"],
+        [bulan ? "Periode: " + bulan : ""],
+        [],
         ["No", "Tanggal", "Uraian", "Masuk", "Keluar", "Saldo"]
     ];
 
-    data.forEach((d, i) => {
+    let no = 1;
+
+    data.forEach((d) => {
+
+        if (bulan && !d.tanggal.startsWith(bulan)) return;
+
         saldo += (d.masuk - d.keluar);
+        totalMasuk += d.masuk;
+        totalKeluar += d.keluar;
 
         wsData.push([
-            i + 1,
+            no++,
             d.tanggal,
             d.uraian,
             d.masuk ? "Rp " + d.masuk.toLocaleString("id-ID") : "-",
@@ -261,16 +281,34 @@ function exportExcel() {
         ]);
     });
 
+    // JARAK
+    wsData.push([]);
+
+    // TOTAL
+    wsData.push(["", "", "TOTAL MASUK", "Rp " + totalMasuk.toLocaleString("id-ID")]);
+    wsData.push(["", "", "TOTAL KELUAR", "Rp " + totalKeluar.toLocaleString("id-ID")]);
+    wsData.push(["", "", "SALDO AKHIR", "Rp " + saldo.toLocaleString("id-ID")]);
+
+    // TANDA TANGAN
+    wsData.push([]);
+    wsData.push([]);
+    wsData.push(["", "", "", "Mengetahui,"]);
+    wsData.push(["", "", "", "Ketua TPS3R"]);
+    wsData.push([]);
+    wsData.push([]);
+    wsData.push(["", "", "", "(____________________)"]);
+
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(wsData);
 
+    // LEBAR KOLOM
     ws['!cols'] = [
         { wch: 5 },
         { wch: 15 },
-        { wch: 30 },
-        { wch: 15 },
-        { wch: 15 },
-        { wch: 15 }
+        { wch: 40 },
+        { wch: 20 },
+        { wch: 20 },
+        { wch: 20 }
     ];
 
     XLSX.utils.book_append_sheet(wb, ws, "Laporan Kas");
