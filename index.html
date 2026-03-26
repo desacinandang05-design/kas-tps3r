@@ -115,11 +115,21 @@ td:last-child button {
   font-size: 12px;
   margin: 2px;
 }
-
-td:last-child {
+.aksi-btn {
   display: flex;
   justify-content: center;
   gap: 5px;
+}
+
+.aksi-btn button {
+  padding: 5px 8px;
+  font-size: 12px;
+  min-width: auto;
+}
+
+th:last-child, td:last-child {
+  text-align: center;
+  width: 120px;
 }
 
 </style>
@@ -189,6 +199,7 @@ td:last-child {
 </table>
 </div>
 
+<button id="btnSimpan" onclick="tambah()">Tambah</button>
 <script>
 
 function laporan(){
@@ -312,8 +323,10 @@ function tampil(){
     <td>${d.keluar ? formatRupiah(d.keluar) : "-"}</td>
     <td>${formatRupiah(saldo)}</td>
     <td>
-      <button onclick="editData('${d.id}', '${d.tanggal}', '${d.uraian}', ${d.masuk}, ${d.keluar})">Edit</button>
-      <button onclick="hapus('${d.id}')">Hapus</button>
+      <div class="aksi-btn">
+        <button onclick="editData('${d.id}', '${d.tanggal}', '${d.uraian}', ${d.masuk}, ${d.keluar})">Edit</button>
+        <button onclick="hapus('${d.id}')">Hapus</button>
+      </div>
     </td>
     </tr>`;
   });
