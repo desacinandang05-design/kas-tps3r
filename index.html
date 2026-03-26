@@ -16,7 +16,6 @@ body {
   background: #eef2f7;
   margin: 0;
 }
-
 .dashboard {
   display: flex;
   gap: 15px;
@@ -53,73 +52,6 @@ body {
 
 .keluar {
   background: linear-gradient(135deg, #e53e3e, #fc8181);
-}
-.header {
-  background: linear-gradient(135deg, #2c7a7b, #38b2ac);
-  color: white;
-  padding: 20px;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.container {
-  padding: 20px;
-  max-width: 900px;
-  margin: auto;
-}
-
-.card {
-  background: white;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-
-input, button {
-  padding: 10px;
-  margin: 5px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
-
-input {
-  width: 180px;
-}
-
-button {
-  background: #2c7a7b;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
-  background: #285e61;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-th {
-  background: #2c7a7b;
-  color: white;
-}
-
-th, td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
-}
-
-tr:nth-child(even) {
-  background: #f9f9f9;
 }
 </style>
 </style>
@@ -158,8 +90,8 @@ tr:nth-child(even) {
 
 <input type="date" id="tanggal">
 <input type="text" id="uraian" placeholder="Uraian">
-<input type="number" id="masuk" placeholder="Masuk">
-<input type="number" id="keluar" placeholder="Keluar">
+<input type="text" id="masuk" placeholder="Masuk">
+<input type="text" id="keluar" placeholder="Keluar">
 <button onclick="tambah()">Tambah</button>
 <button onclick="exportExcel()">Export Excel</button>
 <h3>Laporan Bulanan</h3>
@@ -282,6 +214,8 @@ function ambilData(){
 
 // TAMPILKAN
 function tampil(){
+  let t = "";
+  let saldo = 0;
   let totalMasuk = 0;
   let totalKeluar = 0;
 
@@ -289,6 +223,7 @@ function tampil(){
     saldo += (d.masuk - d.keluar);
     totalMasuk += d.masuk;
     totalKeluar += d.keluar;
+
     t+=`
     <tr>
     <td>${i+1}</td>
@@ -301,12 +236,13 @@ function tampil(){
     </tr>`;
   });
 
-  document.getElementById("tabel").innerHTML=t;
-}
+  document.getElementById("tabel").innerHTML = t;
 
-document.getElementById("saldoDashboard").innerText = "Rp " + formatRupiah(saldo);
-document.getElementById("masukDashboard").innerText = "Rp " + formatRupiah(totalMasuk);
-document.getElementById("keluarDashboard").innerText = "Rp " + formatRupiah(totalKeluar);
+  // ✅ DASHBOARD HARUS DI SINI
+  document.getElementById("saldoDashboard").innerText = "Rp " + formatRupiah(saldo);
+  document.getElementById("masukDashboard").innerText = "Rp " + formatRupiah(totalMasuk);
+  document.getElementById("keluarDashboard").innerText = "Rp " + formatRupiah(totalKeluar);
+}
 
 // HAPUS
 function hapus(id){
