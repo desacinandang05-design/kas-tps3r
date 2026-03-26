@@ -18,19 +18,22 @@ body {
 }
 .dashboard {
   display: flex;
-  gap: 15px;
+  justify-content: center;   /* tengah horizontal */
+  align-items: center;       /* tengah vertikal */
+  gap: 20px;
   flex-wrap: wrap;
-  margin-bottom: 15px;
+  margin: 30px 0;
 }
-
 .box {
-  flex: 1;
-  min-width: 200px;
-  text-align: center;
+  width: 220px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   color: white;
   border-radius: 12px;
 }
-
 .box h3 {
   margin: 0;
   font-size: 16px;
@@ -178,11 +181,11 @@ function laporan(){
 
   let saldo = totalMasuk - totalKeluar;
 
-  document.getElementById("hasil").innerHTML = `
-    Total Masuk: ${totalMasuk} <br>
-    Total Keluar: ${totalKeluar} <br>
-    Saldo: ${saldo}
-  `;
+document.getElementById("hasil").innerHTML = `
+  Total Masuk: Rp ${formatRupiah(totalMasuk)} <br>
+  Total Keluar: Rp ${formatRupiah(totalKeluar)} <br>
+  Saldo: Rp ${formatRupiah(saldo)}
+`;
 }
 // 🔥 CONFIG PUNYA MAS
 const firebaseConfig = {
@@ -264,7 +267,13 @@ function tampil(){
   let totalMasuk = 0;
   let totalKeluar = 0;
 
+  let bulan = document.getElementById("bulan").value;
+
   data.forEach((d,i)=>{
+
+    // 🔥 FILTER BULAN
+    if (bulan && !d.tanggal.startsWith(bulan)) return;
+
     saldo += (d.masuk - d.keluar);
     totalMasuk += d.masuk;
     totalKeluar += d.keluar;
@@ -283,7 +292,7 @@ function tampil(){
 
   document.getElementById("tabel").innerHTML = t;
 
-  // ✅ DASHBOARD HARUS DI SINI
+  // Dashboard update
   document.getElementById("saldoDashboard").innerText = "Rp " + formatRupiah(saldo);
   document.getElementById("masukDashboard").innerText = "Rp " + formatRupiah(totalMasuk);
   document.getElementById("keluarDashboard").innerText = "Rp " + formatRupiah(totalKeluar);
@@ -382,6 +391,8 @@ document.getElementById("keluar").addEventListener("input", function(e) {
     let value = e.target.value.replace(/\D/g, "");
     e.target.value = formatRupiah(value);
 });
+
+document.getElementById("bulan").addEventListener("change", tampil);
 
 </script>
 
