@@ -157,26 +157,26 @@ const db = firebase.firestore();
 let data = [];
 
 // LOGIN / REGISTER
-function login() {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+function login(){
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-    if (username === "admin" && password === "admin") {
-        // ✅ TAMBAHKAN INI
-        localStorage.setItem("isLogin", "true");
-
-        window.location.href = "index.html";
-    } else {
-        alert("Username atau password salah!");
-    }
+  auth.signInWithEmailAndPassword(email, password)
+  .then(() => {
+    alert("Login berhasil");
+  })
+  .catch(err => {
+    // kalau belum punya akun → otomatis daftar
+    auth.createUserWithEmailAndPassword(email, password)
+    .then(()=>{
+      alert("Akun dibuat & login berhasil");
+    })
+    .catch(e => alert(e.message));
+  });
 }
-
 // LOGOUT
 function logout(){
-  function logout() {
-    localStorage.removeItem("isLogin"); // ✅ aman
-
-    window.location.href = "login.html";
+  auth.signOut();
 }
 
 // CEK LOGIN
@@ -185,9 +185,11 @@ auth.onAuthStateChanged(user => {
     document.getElementById("login").style.display="none";
     document.getElementById("app").style.display="block";
     ambilData();
+  } else {
+    document.getElementById("login").style.display="block";
+    document.getElementById("app").style.display="none";
   }
 });
-
 // TAMBAH DATA
 function tambah(){
   db.collection("kas").add({
@@ -242,13 +244,13 @@ function exportToExcel(data) {
     const wsData = [
         ["No", "Tanggal", "Uraian", "Masuk", "Keluar", "Saldo"], // Header
         ...data.map((d, i) => [
-            i + 1,
-            d.tanggal,
-            d.uraian,
-            d.masuk ? "Rp " + d.masuk.toLocaleString("id-ID") : "-"
-            d.keluar,
-            d.saldo
-        ])
+    i + 1,
+    d.tanggal,
+    d.uraian,
+    d.masuk ? "Rp " + d.masuk.toLocaleString("id-ID") : "-",
+    d.keluar,
+    d.saldo
+])
     ];
 
     const ws = XLSX.utils.aoa_to_sheet(wsData);
@@ -268,15 +270,7 @@ function exportToExcel(data) {
     XLSX.writeFile(wb, "Laporan_Kas.xlsx");
 }
 
-  // ✅ CEK LOGIN SAAT HALAMAN DIBUKA
-if (localStorage.getItem("isLogin") !== "true") {
-    window.location.href = "login.html";
-}
 
-  // helper
-function isLoggedIn() {
-    return localStorage.getItem("isLogin") === "true";
-}
 </script>
 
 </body>
