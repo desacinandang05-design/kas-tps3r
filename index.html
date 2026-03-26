@@ -186,6 +186,15 @@ th:last-child, td:last-child {
   opacity: 0.8;
 }
 
+.modal-content {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {transform: scale(0.8); opacity: 0;}
+  to {transform: scale(1); opacity: 1;}
+}
+
 </style>
 
 <div class="header">
@@ -266,19 +275,7 @@ th:last-child, td:last-child {
 <tbody id="tabel"></tbody>
 </table>
 </div>
-  <div class="modal-content">
-    <h3>Edit Data</h3>
 
-    <input type="date" id="editTanggal">
-    <input type="text" id="editUraian" placeholder="Uraian">
-    <input type="text" id="editMasuk" placeholder="Masuk">
-    <input type="text" id="editKeluar" placeholder="Keluar">
-
-    <br><br>
-    <button onclick="simpanEdit()">Simpan</button>
-    <button onclick="tutupModal()">Batal</button>
-  </div>
-</div>
 <script>
 
 function laporan(){
