@@ -101,6 +101,10 @@ tr:nth-child(even) {
   background: #f2f2f2;
 }
 
+button {
+  min-width: 120px;
+}
+
 </style>
 </style>
 
@@ -146,6 +150,11 @@ tr:nth-child(even) {
 
 <input type="month" id="bulan">
 <button onclick="laporan()">Tampilkan</button>
+
+<br>
+
+<button onclick="semuaBulan()">Semua Bulan</button>
+<button onclick="bulanIni()">Bulan Ini</button>
 
 <p id="hasil"></p>
 <table>
@@ -393,6 +402,23 @@ document.getElementById("keluar").addEventListener("input", function(e) {
 });
 
 document.getElementById("bulan").addEventListener("change", tampil);
+
+function semuaBulan(){
+    document.getElementById("bulan").value = "";
+    tampil();
+}
+
+function bulanIni(){
+    let sekarang = new Date();
+    let bulan = sekarang.toISOString().slice(0,7); // format YYYY-MM
+
+    document.getElementById("bulan").value = bulan;
+    tampil();
+}
+
+window.onload = function() {
+    bulanIni();
+};
 
 </script>
 
