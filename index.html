@@ -157,22 +157,26 @@ const db = firebase.firestore();
 let data = [];
 
 // LOGIN / REGISTER
-function login(){
-  let emailVal = document.getElementById("email").value;
-  let passVal = document.getElementById("password").value;
+function login() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
-  auth.signInWithEmailAndPassword(emailVal, passVal)
-  .then(()=> alert("Login berhasil"))
-  .catch(err => {
-    alert(err.message);
-    auth.createUserWithEmailAndPassword(emailVal, passVal)
-    .catch(e => alert(e.message));
-  });
+    if (username === "admin" && password === "admin") {
+        // ✅ TAMBAHKAN INI
+        localStorage.setItem("isLogin", "true");
+
+        window.location.href = "index.html";
+    } else {
+        alert("Username atau password salah!");
+    }
 }
 
 // LOGOUT
 function logout(){
-  auth.signOut();
+  function logout() {
+    localStorage.removeItem("isLogin"); // ✅ aman
+
+    window.location.href = "login.html";
 }
 
 // CEK LOGIN
@@ -263,7 +267,16 @@ function exportToExcel(data) {
 
     XLSX.writeFile(wb, "Laporan_Kas.xlsx");
 }
-  
+
+  // ✅ CEK LOGIN SAAT HALAMAN DIBUKA
+if (localStorage.getItem("isLogin") !== "true") {
+    window.location.href = "login.html";
+}
+
+  // helper
+function isLoggedIn() {
+    return localStorage.getItem("isLogin") === "true";
+}
 </script>
 
 </body>
