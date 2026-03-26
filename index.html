@@ -9,9 +9,10 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-<style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
 </head>
+<body>
 body {
   font-family: 'Segoe UI', Arial;
   background: #eef2f7;
@@ -265,9 +266,6 @@ th:last-child, td:last-child {
 <tbody id="tabel"></tbody>
 </table>
 </div>
-
-<button id="btnSimpan" onclick="tambah()">Tambah</button>
-<div id="modalEdit" class="modal">
   <div class="modal-content">
     <h3>Edit Data</h3>
 
@@ -595,33 +593,7 @@ function simpanEdit(){
 
     tutupModal();
 }
-let editId = null;
 
-function editData(id, tanggal, uraian, masuk, keluar){
-    editId = id;
-
-    document.getElementById("editTanggal").value = tanggal;
-    document.getElementById("editUraian").value = uraian;
-    document.getElementById("editMasuk").value = formatRupiah(masuk);
-    document.getElementById("editKeluar").value = formatRupiah(keluar);
-
-    document.getElementById("modalEdit").style.display = "block";
-}
-
-function tutupModal(){
-    document.getElementById("modalEdit").style.display = "none";
-}
-
-function simpanEdit(){
-    db.collection("kas").doc(editId).update({
-        tanggal: document.getElementById("editTanggal").value,
-        uraian: document.getElementById("editUraian").value,
-        masuk: parseInt(document.getElementById("editMasuk").value.replace(/\./g, "")) || 0,
-        keluar: parseInt(document.getElementById("editKeluar").value.replace(/\./g, "")) || 0
-    });
-
-    tutupModal();
-}
 </script>
 
 </body>
