@@ -63,6 +63,7 @@ th:nth-child(7), td:nth-child(7) { width: 5%; }  /* Aksi */
 
 th, td {
   padding: 12px 10px;
+  border: 1px solid #999;   /* garis lebih jelas */
 }
 
 td:nth-child(4),
@@ -73,12 +74,28 @@ td:nth-child(6) {
 }
 
 table {
-  width: 100%;
+  width: 75%;
+  margin: 20px auto;   /* biar di tengah */
+  border-collapse: collapse;
   table-layout: fixed;
 }
 
 td:nth-child(3) {
   padding-left: 10px;
+}
+
+table {
+  border: 2px solid #555;
+}
+
+th {
+  background: #2c7a7b;
+  color: white;
+  border: 1px solid #555;
+}
+
+tr:nth-child(even) {
+  background: #f2f2f2;
 }
 
 </style>
