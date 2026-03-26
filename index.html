@@ -8,8 +8,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 </head>
 <body>
@@ -193,6 +193,68 @@ th:last-child, td:last-child {
 @keyframes fadeIn {
   from {transform: scale(0.8); opacity: 0;}
   to {transform: scale(1); opacity: 1;}
+}
+
+@media (max-width: 768px) {
+
+  .container {
+    padding: 10px;
+  }
+
+  /* Dashboard jadi ke bawah */
+  .dashboard {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .box {
+    width: 90%;
+    height: auto;
+    padding: 15px;
+  }
+
+  /* Form input full lebar */
+  input {
+    width: 95%;
+    margin: 5px auto;
+    display: block;
+  }
+
+  button {
+    width: 95%;
+    margin: 5px auto;
+    display: block;
+  }
+
+  /* Tabel scroll horizontal */
+  table {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Kolom tidak terlalu kecil */
+  th, td {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  /* Tombol aksi tetap rapi */
+  .aksi-btn {
+    flex-direction: row;
+    gap: 3px;
+  }
+
+}
+
+.header {
+  font-size: 18px;
+  padding: 15px;
+}
+
+button:active {
+  transform: scale(0.97);
 }
 
 </style>
