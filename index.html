@@ -10,6 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
+</head>
 body {
   font-family: 'Segoe UI', Arial;
   background: #eef2f7;
@@ -159,7 +160,7 @@ td:last-child {
 <input type="text" id="uraian" placeholder="Uraian">
 <input type="text" id="masuk" placeholder="Masuk">
 <input type="text" id="keluar" placeholder="Keluar">
-<button onclick="tambah()">Tambah</button>
+<button id="btnSimpan" onclick="tambah()">Tambah</button>
 <button onclick="exportExcel()">Export Excel</button>
 <h3>Laporan Bulanan</h3>
 
@@ -444,11 +445,6 @@ function editData(id, tanggal, uraian, masuk, keluar){
     document.getElementById("keluar").value = formatRupiah(keluar);
 
     const btn = document.getElementById("btnSimpan");
-    btn.innerText = "Update";
-    btn.setAttribute("onclick", `updateData('${id}')`);
-}
-    // ubah tombol tambah jadi update
-    <button id="btnSimpan" onclick="tambah()">Tambah</button>
     btn.innerText = "Update";
     btn.setAttribute("onclick", `updateData('${id}')`);
 }
