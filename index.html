@@ -10,7 +10,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
-</head>
 body {
   font-family: 'Segoe UI', Arial;
   background: #eef2f7;
@@ -105,7 +104,6 @@ button {
   min-width: 120px;
 }
 
-</style>
 </style>
 
 <div class="header">
@@ -277,18 +275,10 @@ function tampil(){
   let totalKeluar = 0;
 
   let bulan = document.getElementById("bulan").value;
+  let no = 1;
 
-let no = 1;
+  data.forEach((d)=>{
 
-data.forEach((d)=>{
-
-  if (bulan && !d.tanggal.startsWith(bulan)) return;
-
-  t+=`
-  <tr>
-  <td>${no++}</td>
-
-    // 🔥 FILTER BULAN
     if (bulan && !d.tanggal.startsWith(bulan)) return;
 
     saldo += (d.masuk - d.keluar);
@@ -297,7 +287,7 @@ data.forEach((d)=>{
 
     t+=`
     <tr>
-    <td>${i+1}</td>
+    <td>${no++}</td>
     <td>${d.tanggal}</td>
     <td>${d.uraian}</td>
     <td>${d.masuk ? formatRupiah(d.masuk) : "-"}</td>
@@ -312,12 +302,10 @@ data.forEach((d)=>{
 
   document.getElementById("tabel").innerHTML = t;
 
-  // Dashboard update
   document.getElementById("saldoDashboard").innerText = "Rp " + formatRupiah(saldo);
   document.getElementById("masukDashboard").innerText = "Rp " + formatRupiah(totalMasuk);
   document.getElementById("keluarDashboard").innerText = "Rp " + formatRupiah(totalKeluar);
 }
-
 // HAPUS
 function hapus(id){
   db.collection("kas").doc(id).delete();
